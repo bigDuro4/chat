@@ -3,10 +3,16 @@ import os
 from google import genai
 from google.genai import types
 
+load_dotenv()
+
 def generate_test():
-    client = genai.Client(
-        api_key=os.getenv("GEMINI_API_KEY"),
-    )
+    api_key = os.getenv("GEMINI_API_KEY")
+
+    # 🛑 Safety check
+    if not api_key:
+        raise ValueError("GEMINI_API_KEY not found. Check your .env file.")
+
+    client = genai.Client(api_key=api_key)
 
     model = "gemini-3-flash-preview"
 
@@ -33,4 +39,10 @@ def generate_test():
         contents=history,
     )
 
+    print("✅ Gemini response:\n")
     print(response.text)
+
+
+# ▶️ THIS ACTUALLY RUNS THE TEST
+if __name__ == "__main__":
+    generate_test()
